@@ -18,6 +18,12 @@ jobs:
         with:
           node-version: 20
 
+      # Install Chrome for Lighthouse & Pa11y
+      - name: Install Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
       # HTML Validation
       - name: Install HTML validator
         run: npm install -g htmlhint
@@ -60,7 +66,7 @@ jobs:
         run: npm install -g lighthouse
 
       - name: Run Lighthouse audit
-        run: lighthouse http://localhost:8080 --chrome-flags="--headless" --quiet || true
+        run: lighthouse http://localhost:8080 --chrome-flags="--headless --no-sandbox" --quiet || true
 
       # Accessibility test
       - name: Install Pa11y
