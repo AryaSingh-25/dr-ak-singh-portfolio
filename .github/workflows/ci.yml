@@ -66,7 +66,18 @@ jobs:
         run: npm install -g lighthouse
 
       - name: Run Lighthouse audit
-        run: lighthouse http://localhost:8080 --chrome-flags="--headless --no-sandbox" --quiet || true
+        run: |
+          lighthouse http://localhost:8080 \
+          --chrome-flags="--headless --no-sandbox" \
+          --output html \
+          --output-path ./lighthouse-report.html
+
+      # Upload Lighthouse report
+      - name: Upload Lighthouse report
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: lighthouse-report.html
 
       # Accessibility test
       - name: Install Pa11y
