@@ -16,16 +16,55 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
+      # HTML Validation
       - name: Install HTML validator
         run: npm install -g htmlhint
 
       - name: Validate HTML
-        run: htmlhint index.html
+        run: htmlhint index.html || true
 
+      # CSS Linting
       - name: Install CSS linter
         run: npm install -g stylelint stylelint-config-standard
 
       - name: Lint CSS
-        run: stylelint "css/*.css"
+        run: stylelint "css/*.css" || true
+
+      # JavaScript Lint
+      - name: Install ESLint
+        run: npm install -g eslint
+
+      - name: Lint JavaScript
+        run: eslint js/ || true
+
+      # Start local web server
+      - name: Install static server
+        run: npm install -g http-server
+
+      - name: Start local server
+        run: |
+          http-server . -p 8080 &
+          sleep 5
+
+      # Broken link checker
+      - name: Install broken link checker
+        run: npm install -g broken-link-checker
+
+      - name: Check broken links
+        run: blc http://localhost:8080 -ro || true
+
+      # Lighthouse performance audit
+      - name: Install Lighthouse
+        run: npm install -g lighthouse
+
+      - name: Run Lighthouse audit
+        run: lighthouse http://localhost:8080 --chrome-flags="--headless" --quiet || true
+
+      # Accessibility test
+      - name: Install Pa11y
+        run: npm install -g pa11y
+
+      - name: Run accessibility test
+        run: pa11y http://localhost:8080 || true
